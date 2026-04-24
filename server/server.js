@@ -37,13 +37,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('{*path}', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-  });
-}
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'NoteShare API is running', status: 'ok' });
+});
 
 // Error handling middleware (demonstrates error middleware - syllabus CO4)
 app.use((err, req, res, next) => {
