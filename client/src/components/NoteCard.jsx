@@ -2,9 +2,13 @@ import { Link } from 'react-router-dom';
 
 const NoteCard = ({ note }) => {
   const maxLen = 150;
-  const snippet = note.content.length > maxLen
-    ? note.content.substring(0, maxLen) + '...'
+  // Strip HTML tags for preview
+  const plainText = note.isHTML
+    ? note.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
     : note.content;
+  const snippet = plainText.length > maxLen
+    ? plainText.substring(0, maxLen) + '...'
+    : plainText;
 
   const timeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
