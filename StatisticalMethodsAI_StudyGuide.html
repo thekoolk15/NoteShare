@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistical Methods for AI — Study Guide</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#f5f5f0;color:#1a1a1a;padding:1rem}
+.container{max-width:900px;margin:0 auto}
+.header{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px}
+.header-icon{width:44px;height:44px;background:#EEEDFE;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.nav-btn{padding:7px 14px;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;color:#555;transition:all 0.15s}
+.nav-btn.active{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC;font-weight:500}
+.nav-btn:hover{background:#f0f0f8}
+.section{display:none}.section.active{display:block}
+.topic-card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.topic-title{font-size:15px;font-weight:600;margin-bottom:0.75rem;color:#1a1a1a}
+.def-box{background:#f8f8f5;border-left:3px solid #7F77DD;border-radius:0 8px 8px 0;padding:0.75rem 1rem;margin:0.75rem 0;font-size:14px;line-height:1.7}
+.simple-box{background:#f0faf5;border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:0.75rem 1rem;margin:0.75rem 0;font-size:14px;line-height:1.7}
+.example-box{background:#f8f8f5;border:1px solid #e0e0d8;border-radius:8px;padding:1rem;margin:0.75rem 0}
+.example-title{font-size:12px;font-weight:600;color:#7F77DD;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em}
+.solution-btn{padding:5px 12px;border:1px solid #7F77DD;border-radius:8px;background:transparent;cursor:pointer;font-size:12px;color:#7F77DD;margin-top:0.5rem}
+.solution{display:none;margin-top:0.75rem;font-size:13px;line-height:1.8;border-top:1px solid #e0e0d8;padding-top:0.75rem}
+.solution.open{display:block}
+.formula{font-family:monospace;background:#f0f0f8;padding:4px 10px;border-radius:6px;font-size:13px;display:inline-block;margin:3px 0;border:1px solid #ddd}
+.formula-block{font-family:monospace;background:#f0f0f8;padding:12px 16px;border-radius:8px;font-size:13px;margin:8px 0;border:1px solid #ddd;line-height:2.1}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;margin:0 4px 4px 0}
+.tag-def{background:#EEEDFE;color:#3C3489}
+.tag-simple{background:#E1F5EE;color:#085041}
+.tag-ex{background:#FAECE7;color:#712B13}
+.step{display:flex;gap:8px;align-items:flex-start;margin:5px 0;font-size:13px}
+.step-num{min-width:22px;height:22px;border-radius:50%;background:#7F77DD;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.highlight{color:#3C3489;font-weight:600}
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:0.75rem}
+.cheat-card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:1rem}
+.cheat-title{font-size:12px;font-weight:600;color:#555;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em}
+.trick-card{background:#fffbf0;border-left:3px solid #EF9F27;border-radius:0 8px 8px 0;padding:0.75rem 1rem;margin:0.5rem 0;font-size:13px;line-height:1.7}
+.progress-bar{height:4px;background:#e0e0d8;border-radius:2px;margin-bottom:1rem}
+.progress-fill{height:100%;border-radius:2px;background:#7F77DD}
+p{font-size:14px;line-height:1.7;margin-bottom:0.5rem}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <div class="header-icon">📊</div>
+  <div>
+    <div style="font-size:17px;font-weight:600">Statistical Methods for AI</div>
+    <div style="font-size:12px;color:#666">B.E. CSE — Complete Study Guide · 3 Units · 45 Contact Hours</div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show('u1',this)">Unit 1: Statistics &amp; Probability</button>
+  <button class="nav-btn" onclick="show('u2',this)">Unit 2: Regression &amp; Correlation</button>
+  <button class="nav-btn" onclick="show('u3',this)">Unit 3: Estimation Theory</button>
+  <button class="nav-btn" onclick="show('cheat',this)">📋 Formula Cheat Sheet</button>
+  <button class="nav-btn" onclick="show('tricks',this)">🧠 Memory Tricks</button>
+</div>
+
+<!-- UNIT 1 -->
+<div id="u1" class="section active">
+  <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.1 — Population vs. Sample</div>
+    <span class="tag tag-def">Definition</span>
+    <div class="def-box"><strong>Population:</strong> The complete set of all elements/individuals being studied.<br><strong>Sample:</strong> A subset of the population selected for analysis.<br><strong>Parameter:</strong> A numerical value describing a population (e.g., μ, σ).<br><strong>Statistic:</strong> A numerical value describing a sample (e.g., x̄, s).<br><br><strong>Descriptive Statistics:</strong> Summarizes data (mean, charts).<br><strong>Inferential Statistics:</strong> Uses sample to make predictions about population (hypothesis tests, CI).</div>
+    <span class="tag tag-simple">Simple explanation</span>
+    <div class="simple-box">Imagine you want to know the average marks of all CSE students in India. Testing ALL of them = population study (impossible). Testing 1000 random students = sample. The average of those 1000 is a "statistic" that estimates the population "parameter."</div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.2 — Types of Data</div>
+    <div class="def-box">
+      <strong>Qualitative (Categorical):</strong> Non-numeric<br>
+      &nbsp;&nbsp;• Nominal: no order (colors, blood types)<br>
+      &nbsp;&nbsp;• Ordinal: ordered (ranks, grades A/B/C)<br><br>
+      <strong>Quantitative (Numerical):</strong> Numeric<br>
+      &nbsp;&nbsp;• Discrete: countable (number of bugs, students)<br>
+      &nbsp;&nbsp;• Continuous: measurable (height, temperature, time)
+    </div>
+    <div class="simple-box">Key question: "Can you do meaningful math with it?" Qualitative = No (Red + Blue = ?). Quantitative = Yes (marks, age, salary).</div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.3 — Probability Fundamentals</div>
+    <span class="tag tag-def">Definition</span>
+    <div class="def-box">
+      <strong>Basic Probability:</strong> P(A) = favourable outcomes / total outcomes &nbsp;(0 ≤ P(A) ≤ 1)<br><br>
+      <strong>Addition Rule:</strong> P(A∪B) = P(A) + P(B) − P(A∩B)<br><br>
+      <strong>Conditional Probability:</strong> P(A|B) = P(A∩B) / P(B)<br><br>
+      <strong>Bayes' Theorem:</strong> P(A|B) = [P(B|A) · P(A)] / P(B)
+    </div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — Bayes' Theorem (Spam Filter)</div>
+      <p>60% of emails are spam. Of spam, 90% contain "free." Of non-spam, 10% contain "free." An email contains "free." Find P(spam|free).</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <p><strong>Given:</strong> P(Spam)=0.6, P(¬Spam)=0.4, P(free|Spam)=0.9, P(free|¬Spam)=0.1</p>
+        <div class="step"><div class="step-num">1</div><div>P(free) = 0.9×0.6 + 0.1×0.4 = 0.54 + 0.04 = <strong>0.58</strong></div></div>
+        <div class="step"><div class="step-num">2</div><div>P(Spam|free) = (0.9×0.6)/0.58 = 0.54/0.58 ≈ <span class="highlight">0.931 = 93.1%</span></div></div>
+        <p style="margin-top:8px">→ 93.1% chance the email is spam. This is exactly how AI spam filters work!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.4 — Random Variables &amp; Probability Distributions</div>
+    <div class="def-box">
+      <strong>Random Variable:</strong> Variable whose value is determined by a random event.<br>
+      <strong>Discrete:</strong> PMF → P(X=x) &nbsp;|&nbsp; <strong>Continuous:</strong> PDF → f(x), area under curve = 1<br><br>
+      <strong>Normal:</strong> <span class="formula">f(x) = (1/σ√2π)·e^(−(x−μ)²/2σ²)</span><br>
+      <strong>Binomial:</strong> <span class="formula">P(X=k) = C(n,k)·p^k·(1−p)^(n−k)</span><br>
+      <strong>Poisson:</strong> <span class="formula">P(X=k) = λ^k·e^(−λ)/k!</span><br>
+      <strong>Exponential:</strong> <span class="formula">f(x) = λe^(−λx)</span>
+    </div>
+    <div class="simple-box">Normal distribution is everywhere: heights, exam marks, AI model errors. The <strong>68-95-99.7 Rule</strong>: 68% of data falls within 1σ of mean, 95% within 2σ, 99.7% within 3σ.</div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — Binomial Distribution</div>
+      <p>An AI model has 80% accuracy. Tested on 5 samples, find P(exactly 4 correct).</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <p><strong>Given:</strong> n=5, k=4, p=0.8, (1−p)=0.2</p>
+        <div class="step"><div class="step-num">1</div><div>C(5,4) = 5!/(4!·1!) = 5</div></div>
+        <div class="step"><div class="step-num">2</div><div>P(X=4) = 5 × (0.8)⁴ × (0.2)¹ = 5 × 0.4096 × 0.2 = <span class="highlight">0.4096 ≈ 41%</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.5 — Hypothesis Testing</div>
+    <div class="def-box">
+      <strong>H₀ (Null):</strong> Default assumption (e.g., "no improvement")<br>
+      <strong>H₁ (Alternative):</strong> What we want to prove<br>
+      <strong>p-value:</strong> P(observing our result | H₀ is true)<br>
+      <strong>Significance level α:</strong> Usually 0.05. <strong>Reject H₀ if p-value &lt; α</strong><br><br>
+      <strong>Type I Error (α):</strong> Reject H₀ when true (False Positive)<br>
+      <strong>Type II Error (β):</strong> Fail to reject H₀ when false (False Negative)
+    </div>
+    <div class="simple-box">Like a courtroom: H₀ = "innocent." We need strong evidence (low p-value) to declare "guilty." If p &lt; 0.05, evidence is strong enough → reject H₀.</div>
+    <div class="def-box">
+      <strong>Confidence Interval:</strong> <span class="formula">CI = x̄ ± z*(σ/√n)</span><br>
+      z* = 1.645 (90%) &nbsp;|&nbsp; z* = 1.96 (95%) &nbsp;|&nbsp; z* = 2.576 (99%)
+    </div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — 95% Confidence Interval</div>
+      <p>Sample of 100 students: mean score = 75, σ = 10. Find 95% CI.</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>SE = σ/√n = 10/√100 = 1</div></div>
+        <div class="step"><div class="step-num">2</div><div>Margin of Error = 1.96 × 1 = 1.96</div></div>
+        <div class="step"><div class="step-num">3</div><div>CI = 75 ± 1.96 = <span class="highlight">(73.04, 76.96)</span></div></div>
+        <p style="margin-top:8px">→ We are 95% confident the true mean lies between 73.04 and 76.96.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 1.6 — EDA: Exploratory Data Analysis</div>
+    <div class="def-box">
+      <strong>Central Tendency:</strong> Mean (x̄=Σx/n), Median, Mode<br>
+      <strong>Spread:</strong> Range, Variance s²=Σ(xᵢ−x̄)²/(n−1), Std Dev s=√s², IQR<br>
+      <strong>Pearson Correlation:</strong> <span class="formula">r = Σ[(xᵢ−x̄)(yᵢ−ȳ)] / √[Σ(xᵢ−x̄)²·Σ(yᵢ−ȳ)²]</span><br>
+      r=1: perfect positive &nbsp;|&nbsp; r=−1: perfect negative &nbsp;|&nbsp; r=0: no linear relation<br><br>
+      <strong>Visualizations:</strong> Histogram (shape) · Box plot (outliers) · Scatter plot (relationship) · Correlation matrix (all pairs)
+    </div>
+  </div>
+</div>
+
+<!-- UNIT 2 -->
+<div id="u2" class="section">
+  <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 2.1 — Simple Linear Regression (SLR)</div>
+    <div class="def-box">
+      <strong>Model:</strong> <span class="formula">Ŷ = β₀ + β₁X</span> &nbsp;(β₀ = intercept, β₁ = slope)<br><br>
+      <strong>Least Squares Estimates:</strong><br>
+      <span class="formula">β₁ = Sxy / Sxx</span> where Sxy = Σ(xᵢ−x̄)(yᵢ−ȳ), Sxx = Σ(xᵢ−x̄)²<br>
+      <span class="formula">β₀ = ȳ − β₁·x̄</span><br><br>
+      <strong>Residual (error):</strong> eᵢ = yᵢ − Ŷᵢ
+    </div>
+    <div class="simple-box">The "least squares" line minimizes the sum of squared vertical distances from each data point to the line. β₁ tells us: "For every 1-unit increase in X, Y changes by β₁ units on average."</div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — Finding the Regression Line</div>
+      <p>Hours studied X: 1,2,3,4,5 &nbsp;|&nbsp; Marks Y: 50,55,65,70,75. Find Ŷ.</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>x̄ = (1+2+3+4+5)/5 = 3 &nbsp;|&nbsp; ȳ = (50+55+65+70+75)/5 = 63</div></div>
+        <div class="step"><div class="step-num">2</div><div>Sxy = (−2)(−13)+(−1)(−8)+(0)(2)+(1)(7)+(2)(12) = 26+8+0+7+24 = 65</div></div>
+        <div class="step"><div class="step-num">3</div><div>Sxx = 4+1+0+1+4 = 10</div></div>
+        <div class="step"><div class="step-num">4</div><div>β₁ = 65/10 = 6.5 &nbsp;|&nbsp; β₀ = 63 − 6.5×3 = 43.5</div></div>
+        <div class="step"><div class="step-num">5</div><div><span class="highlight">Ŷ = 43.5 + 6.5X</span> &nbsp;→ For X=6: Ŷ = 43.5+39 = 82.5 marks</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 2.2 — Regression Evaluation Metrics</div>
+    <div class="def-box">
+      <strong>MSE:</strong> <span class="formula">MSE = (1/n)Σ(yᵢ−Ŷᵢ)²</span><br>
+      <strong>RMSE:</strong> √MSE — in same units as Y<br>
+      <strong>R² (Coefficient of Determination):</strong> <span class="formula">R² = 1 − SSres/SStot</span><br>
+      SSres = Σ(yᵢ−Ŷᵢ)² &nbsp;|&nbsp; SStot = Σ(yᵢ−ȳ)²<br>
+      R²∈[0,1]: R²=1 perfect fit, R²=0 model explains nothing
+    </div>
+    <div class="simple-box">R²=0.85 means "our model explains 85% of the variation in Y." The remaining 15% is noise. Higher R² is better, but watch out for overfitting!</div>
+    <div class="def-box">
+      <strong>Multiple Regression:</strong> <span class="formula">Ŷ = β₀ + β₁X₁ + β₂X₂ + ... + βₖXₖ</span><br><br>
+      <strong>Logistic Regression (classification):</strong> <span class="formula">P(Y=1) = 1/(1+e^−(β₀+β₁X))</span><br>
+      Outputs probability 0–1 via sigmoid. Used for spam/fraud/disease detection.
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 2.3 — Correlation Analysis</div>
+    <div class="def-box">
+      <strong>Pearson r:</strong> <span class="formula">r = Sxy / √(Sxx·Syy)</span> &nbsp;(−1 ≤ r ≤ 1)<br>
+      <strong>Coefficient of Determination:</strong> r² = proportion of Y's variability explained by X<br>
+      <strong>Partial Correlation:</strong> Correlation between two variables after controlling for others<br>
+      <strong>Multiple Correlation (R):</strong> Correlation between Y and all predictors combined
+    </div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — Correlation Coefficient</div>
+      <p>From previous example: Sxy=65, Sxx=10, Syy=350. Find r and R².</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>r = 65/√(10×350) = 65/√3500 = 65/59.16 ≈ <span class="highlight">0.979</span></div></div>
+        <div class="step"><div class="step-num">2</div><div>R² = 0.979² ≈ <span class="highlight">0.958</span></div></div>
+        <p style="margin-top:8px">→ Very strong positive correlation. Hours studied explains 95.8% of the variation in marks!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 2.4 — Non-linear Regression &amp; Regularization</div>
+    <div class="def-box">
+      <strong>Polynomial Regression:</strong> <span class="formula">Ŷ = β₀ + β₁X + β₂X² + ... + βₖXᵏ</span><br><br>
+      <strong>Regularization (prevent overfitting):</strong><br>
+      &nbsp;&nbsp;• Ridge (L2): minimize MSE + λΣβ²<br>
+      &nbsp;&nbsp;• Lasso (L1): minimize MSE + λΣ|β| (can zero out coefficients = feature selection)
+    </div>
+    <div class="simple-box">When data follows a curve (not a straight line), use polynomial regression. Regularization prevents the model from memorizing training data and failing on new data (overfitting).</div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 2.5 — Time Series Analysis</div>
+    <div class="def-box">
+      <strong>Components:</strong><br>
+      &nbsp;&nbsp;• Trend (T): Long-term direction<br>
+      &nbsp;&nbsp;• Seasonality (S): Regular periodic patterns<br>
+      &nbsp;&nbsp;• Cyclical (C): Irregular longer-term fluctuations<br>
+      &nbsp;&nbsp;• Irregular/Residual (I): Random noise<br><br>
+      <strong>Additive model:</strong> Y = T + S + C + I<br>
+      <strong>Multiplicative model:</strong> Y = T × S × C × I<br><br>
+      <strong>Moving Average:</strong> <span class="formula">MAₜ = (Yₜ + Yₜ₋₁ + ... + Yₜ₋ₖ₊₁) / k</span>
+    </div>
+    <div class="simple-box">Decomposing data into trend + seasonality + noise lets us model each part separately. Used in stock prediction, demand forecasting, Netflix recommendations, and weather prediction.</div>
+  </div>
+</div>
+
+<!-- UNIT 3 -->
+<div id="u3" class="section">
+  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 3.1 — Estimators and Their Properties</div>
+    <div class="def-box">
+      <strong>Estimator (θ̂):</strong> A formula used to estimate a population parameter from sample data.<br>
+      <strong>Point estimator:</strong> Single value (e.g., x̄ estimates μ)<br>
+      <strong>Interval estimator:</strong> Range of values (confidence interval)<br><br>
+      <strong>Properties (UCES):</strong><br>
+      &nbsp;&nbsp;• <strong>Unbiasedness:</strong> E(θ̂) = θ. Bias = E(θ̂) − θ<br>
+      &nbsp;&nbsp;• <strong>Consistency:</strong> As n→∞, θ̂ → θ (converges to true value)<br>
+      &nbsp;&nbsp;• <strong>Efficiency:</strong> Minimum variance among all unbiased estimators<br>
+      &nbsp;&nbsp;• <strong>Sufficiency:</strong> Captures all information about θ in the sample
+    </div>
+    <div class="def-box">
+      <strong>Cramér-Rao Lower Bound (CRLB):</strong> The minimum variance any unbiased estimator can achieve:<br>
+      <span class="formula">Var(θ̂) ≥ 1/I(θ)</span><br>
+      where I(θ) = Fisher Information = −E[∂²/∂θ² ln f(X;θ)]<br>
+      If Var(θ̂) = CRLB → estimator is called <strong>efficient</strong>
+    </div>
+    <div class="simple-box">Dart analogy: Unbiased = average landing on bullseye | Consistent = more throws, closer to center | Efficient = throws tightly clustered (low variance). You want all three!</div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — Proving Unbiasedness of x̄</div>
+      <p>Show that the sample mean x̄ is an unbiased estimator of μ.</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>E(x̄) = E[(x₁+x₂+...+xₙ)/n] = (1/n)·E(x₁+...+xₙ)</div></div>
+        <div class="step"><div class="step-num">2</div><div>= (1/n)·[E(x₁)+...+E(xₙ)] = (1/n)·[μ+μ+...+μ] = (1/n)·nμ</div></div>
+        <div class="step"><div class="step-num">3</div><div>= <span class="highlight">μ</span> → E(x̄) = μ, so x̄ is unbiased ✓</div></div>
+        <p style="margin-top:8px">Note: Sample variance with (n−1) denominator is unbiased. With n denominator it's biased.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 3.2 — Method of Moments (MOM)</div>
+    <div class="def-box">
+      <strong>Idea:</strong> Set population moments = sample moments, then solve for parameters.<br>
+      <strong>k-th population moment:</strong> μₖ' = E(Xᵏ)<br>
+      <strong>k-th sample moment:</strong> mₖ = (1/n)Σxᵢᵏ<br>
+      Equate and solve for unknown parameters.
+    </div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — MOM for Normal Distribution</div>
+      <p>For X ~ N(μ, σ²), find MOM estimators of μ and σ².</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>1st moment: E(X)=μ → set equal to m₁=x̄ → <span class="highlight">μ̂ = x̄</span></div></div>
+        <div class="step"><div class="step-num">2</div><div>2nd moment: E(X²) = σ²+μ² → set equal to m₂=(1/n)Σxᵢ²</div></div>
+        <div class="step"><div class="step-num">3</div><div>σ² = E(X²)−μ² → <span class="highlight">σ̂² = (1/n)Σ(xᵢ−x̄)²</span></div></div>
+        <p style="margin-top:8px">Note: MOM gives biased σ̂² (divides by n, not n−1).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 3.3 — Maximum Likelihood Estimation (MLE)</div>
+    <div class="def-box">
+      <strong>Likelihood:</strong> L(θ) = Π f(xᵢ;θ) — joint probability of observing our data given θ<br>
+      <strong>Log-Likelihood:</strong> <span class="formula">ℓ(θ) = Σ ln f(xᵢ;θ)</span><br>
+      <strong>MLE:</strong> <span class="formula">∂ℓ(θ)/∂θ = 0 → solve for θ̂</span><br><br>
+      <strong>MLE Properties:</strong> Consistent · Asymptotically efficient (reaches CRLB) · Asymptotically normal · Invariant: if θ̂ is MLE of θ, then g(θ̂) is MLE of g(θ)
+    </div>
+    <div class="simple-box">MLE asks: "Given what I observed, what parameter value makes this observation MOST LIKELY?" Like a detective: "Given this evidence, what scenario best explains it?"</div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — MLE for Exponential Distribution</div>
+      <p>X₁,...,Xₙ ~ Exponential(λ), f(x;λ)=λe^(−λx). Find MLE of λ.</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>L(λ) = Π λe^(−λxᵢ) = λⁿ·e^(−λΣxᵢ)</div></div>
+        <div class="step"><div class="step-num">2</div><div>ℓ(λ) = n·ln(λ) − λΣxᵢ</div></div>
+        <div class="step"><div class="step-num">3</div><div>∂ℓ/∂λ = n/λ − Σxᵢ = 0</div></div>
+        <div class="step"><div class="step-num">4</div><div>Solve: <span class="highlight">λ̂ = n/Σxᵢ = 1/x̄</span></div></div>
+        <p style="margin-top:8px">→ If average waiting time is x̄, the rate = 1/x̄. Intuitive!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 3.4 — Law of Large Numbers &amp; Central Limit Theorem</div>
+    <div class="def-box">
+      <strong>Weak LLN:</strong> P(|x̄−μ| &gt; ε) → 0 as n→∞ (x̄ converges in probability to μ)<br>
+      <strong>Strong LLN:</strong> x̄ → μ almost surely (stronger convergence)<br><br>
+      <strong>Central Limit Theorem (CLT):</strong><br>
+      Regardless of population distribution, x̄ becomes normal as n→∞:<br>
+      <span class="formula">x̄ ~ N(μ, σ²/n) for large n (rule of thumb: n ≥ 30)</span><br>
+      <span class="formula">Z = (x̄ − μ) / (σ/√n) ~ N(0,1)</span>
+    </div>
+    <div class="simple-box">CLT is the MOST IMPORTANT theorem in statistics! Even if population is skewed/weird, the distribution of sample means becomes bell-shaped with enough samples. This is why so many tests assume normality!</div>
+    <div class="example-box">
+      <div class="example-title">Solved Example — CLT in Action</div>
+      <p>Server response times ~ Exponential, mean=200ms, σ=200ms. Sample n=100. Find P(x̄ &lt; 210).</p>
+      <button class="solution-btn" onclick="toggleSol(this)">Show solution ▾</button>
+      <div class="solution">
+        <div class="step"><div class="step-num">1</div><div>By CLT: x̄ ~ N(200, 200²/100) = N(200, 400)</div></div>
+        <div class="step"><div class="step-num">2</div><div>SE = 200/√100 = 20</div></div>
+        <div class="step"><div class="step-num">3</div><div>Z = (210−200)/20 = 0.5</div></div>
+        <div class="step"><div class="step-num">4</div><div>P(x̄ &lt; 210) = P(Z &lt; 0.5) = <span class="highlight">0.6915 ≈ 69.15%</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-title">📌 3.5 — Asymptotic Properties</div>
+    <div class="def-box">
+      <strong>Asymptotic Normality:</strong> √n(θ̂−θ) → N(0, σ²) as n→∞<br>
+      <strong>Asymptotic Efficiency:</strong> Achieves CRLB in large samples<br>
+      <strong>Asymptotic Variance:</strong> The σ² in the limiting normal distribution<br><br>
+      <strong>Asymptotic Relative Efficiency:</strong> <span class="formula">ARE(θ̂₁,θ̂₂) = AVar(θ̂₂)/AVar(θ̂₁)</span><br>
+      ARE &gt; 1 → θ̂₁ is more efficient than θ̂₂
+    </div>
+  </div>
+</div>
+
+<!-- CHEAT SHEET -->
+<div id="cheat" class="section">
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <div class="cheat-title">Probability</div>
+      <div class="formula-block">P(A) = fav/total<br>P(A∪B) = P(A)+P(B)−P(A∩B)<br>P(A|B) = P(A∩B)/P(B)<br>Bayes: P(A|B) = P(B|A)P(A)/P(B)</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Distributions</div>
+      <div class="formula-block">Binomial: C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ<br>Poisson: λᵏ·e⁻λ/k!<br>Normal: (1/σ√2π)e^−(x−μ)²/2σ²<br>Exponential: λe^(−λx)</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Descriptive Stats</div>
+      <div class="formula-block">Mean: x̄ = Σxᵢ/n<br>Variance: s²=Σ(xᵢ−x̄)²/(n−1)<br>Std Dev: s = √s²<br>z-score: z = (x−μ)/σ</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Confidence Intervals</div>
+      <div class="formula-block">CI = x̄ ± z*(σ/√n)<br>SE = σ/√n<br>90%: z*=1.645<br>95%: z*=1.96<br>99%: z*=2.576</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Regression</div>
+      <div class="formula-block">Ŷ = β₀ + β₁X<br>β₁ = Sxy/Sxx<br>β₀ = ȳ − β₁x̄<br>Sxy=Σ(xᵢ−x̄)(yᵢ−ȳ)<br>Sxx=Σ(xᵢ−x̄)²</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Regression Metrics</div>
+      <div class="formula-block">MSE = (1/n)Σ(yᵢ−Ŷᵢ)²<br>RMSE = √MSE<br>R²=1−SSres/SStot<br>r=Sxy/√(Sxx·Syy)</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">Estimation</div>
+      <div class="formula-block">Bias = E(θ̂)−θ<br>Unbiased: E(θ̂)=θ<br>CRLB: Var(θ̂)≥1/I(θ)<br>Log-L: ℓ=Σln f(xᵢ;θ)<br>MLE: dℓ/dθ=0</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">CLT &amp; LLN</div>
+      <div class="formula-block">CLT: x̄ ~ N(μ, σ²/n)<br>SE = σ/√n<br>Z = (x̄−μ)/(σ/√n)<br>LLN: x̄ →ₚ μ as n→∞</div>
+    </div>
+    <div class="cheat-card">
+      <div class="cheat-title">MLE Results</div>
+      <div class="formula-block">Normal μ: μ̂=x̄<br>Normal σ²: σ̂²=(1/n)Σ(xᵢ−x̄)²<br>Exponential λ: λ̂=1/x̄<br>Binomial p: p̂=x̄/n</div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMORY TRICKS -->
+<div id="tricks" class="section">
+  <div class="topic-card">
+    <div class="topic-title">🧠 Properties of Good Estimators</div>
+    <div class="trick-card"><strong>Mnemonic: "UCES" → "Uncle CES loves statistics"</strong><br>U = Unbiasedness · C = Consistency · E = Efficiency · S = Sufficiency</div>
+    <div class="trick-card"><strong>Dart analogy:</strong> Unbiased=centered on bullseye | Consistent=gets better with more throws | Efficient=throws are tightly clustered (low variance)</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 Hypothesis Testing Steps</div>
+    <div class="trick-card"><strong>"SHAFT" Method:</strong><br>S = State H₀ and H₁ | H = Set significance level α | A = Assume distribution | F = Find test statistic | T = Test (compare p-value to α, reject if p &lt; α)</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 z* Critical Values (must memorize!)</div>
+    <div class="trick-card"><strong>"One-Two-Three → Ninety-NinetyFive-NinetyNine"</strong><br>z*≈1.645 → 90% CI | z*≈1.96 → 95% CI | z*≈2.576 → 99% CI<br><br>Shortcut: "1.96 ≈ 2" → 95% CI ≈ x̄ ± 2·SE (quick mental math!)</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 Normal Distribution 68-95-99.7 Rule</div>
+    <div class="trick-card"><strong>"All the sixes and nines:"</strong><br>μ ± 1σ → 68.27% of data<br>μ ± 2σ → 95.45% of data<br>μ ± 3σ → 99.73% of data<br><br>Trick: "Almost everything (99.7%) lives within 3 standard deviations."</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 r vs. R²</div>
+    <div class="trick-card"><strong>r = direction + strength of linear relationship</strong><br><strong>R² = % of variance in Y explained by X</strong><br>Always square r to get R². Example: r=0.9 → R²=0.81 → "81% of Y's variation explained."</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 MLE Recipe — "WLMD"</div>
+    <div class="trick-card"><strong>W</strong> = Write likelihood L(θ) = Π f(xᵢ;θ)<br><strong>L</strong> = Log it: ℓ(θ) = Σ ln f(xᵢ;θ)<br><strong>M</strong> = Maximize: set dℓ/dθ = 0, solve for θ̂<br><strong>D</strong> = Declare θ̂ as your MLE</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 CLT vs. LLN — Key Difference</div>
+    <div class="trick-card"><strong>LLN:</strong> "More data → sample mean gets closer to true mean" (WHERE x̄ goes)<br><strong>CLT:</strong> "Distribution of x̄ becomes normal, no matter the original distribution" (WHAT SHAPE it has)<br><br>LLN = Location | CLT = Shape</div>
+  </div>
+  <div class="topic-card">
+    <div class="topic-title">🧠 Regression β₁ in plain English</div>
+    <div class="trick-card"><strong>"Slope = Shared variation / X's own variation"</strong><br>β₁ = Sxy/Sxx → "How much X&Y move together" ÷ "How much X moves alone"<br>Large positive Sxy → strong positive slope → X and Y rise together</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleSol(btn){
+  const sol=btn.nextElementSibling;
+  const open=sol.classList.toggle('open');
+  btn.textContent=open?'Hide solution ▴':'Show solution ▾';
+}
+</script>
+</body>
+</html>

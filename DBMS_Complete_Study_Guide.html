@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DBMS Complete Study Guide — 24CSH-298</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f4; --bg3: #eeece9;
+    --text: #1c1917; --text2: #57534e; --text3: #a8a29e;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --blue-bg: #eff6ff; --blue-text: #1d4ed8; --blue-border: rgba(29,78,216,0.3);
+    --green-bg: #f0fdf4; --green-text: #15803d; --green-border: rgba(21,128,61,0.3);
+    --warn-bg: #fffbeb; --warn-text: #b45309; --warn-border: rgba(180,83,9,0.3);
+    --red-bg: #fef2f2; --red-text: #b91c1c;
+    --accent: #2563eb;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1917; --bg2: #292524; --bg3: #3a3734;
+      --text: #fafaf9; --text2: #a8a29e; --text3: #78716c;
+      --border: rgba(255,255,255,0.12); --border2: rgba(255,255,255,0.22);
+      --blue-bg: #1e3a5f; --blue-text: #93c5fd; --blue-border: rgba(147,197,253,0.3);
+      --green-bg: #14532d; --green-text: #86efac; --green-border: rgba(134,239,172,0.3);
+      --warn-bg: #451a03; --warn-text: #fcd34d; --warn-border: rgba(252,211,77,0.3);
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; line-height: 1.7; color: var(--text); background: var(--bg); padding: 1.5rem; max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+  .progress-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid var(--border); color: var(--text2); background: var(--bg2); }
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tab-btn { padding: 8px 16px; border: 0.5px solid var(--border2); border-radius: var(--radius); background: var(--bg); color: var(--text2); cursor: pointer; font-size: 13px; font-weight: 500; transition: all .15s; }
+  .tab-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+  .tab-btn:hover:not(.active) { background: var(--bg2); }
+  .tab-panel { display: none; } .tab-panel.active { display: block; }
+  .unit-header { border-left: 3px solid var(--blue-text); padding: 0.75rem 1rem; background: var(--blue-bg); border-radius: 0 var(--radius) var(--radius) 0; margin-bottom: 1rem; }
+  .unit-header h2 { font-size: 16px; font-weight: 500; color: var(--blue-text); }
+  .unit-header p { font-size: 12px; color: var(--blue-text); opacity: .8; margin-top: 2px; }
+  .topic { border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 10px; overflow: hidden; }
+  .topic-header { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+  .topic-header:hover { background: var(--bg2); }
+  .topic-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .topic-badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border); }
+  .arrow { font-size: 10px; color: var(--text3); transition: transform .2s; margin-left: 8px; }
+  .topic-body { display: none; padding: 16px; border-top: 0.5px solid var(--border); background: var(--bg); }
+  .topic-body.open { display: block; }
+  .def-block { background: var(--bg2); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 12px; border-left: 2px solid var(--blue-text); }
+  .def-block p { font-size: 13px; color: var(--text); line-height: 1.65; }
+  .def-label { font-size: 11px; font-weight: 600; color: var(--blue-text); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .simple-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 0.5px solid var(--green-border); border-radius: var(--radius); background: transparent; color: var(--green-text); cursor: pointer; font-size: 12px; font-weight: 500; margin: 8px 0; }
+  .simple-btn:hover { background: var(--green-bg); }
+  .simple-box { display: none; background: var(--green-bg); border-radius: var(--radius); padding: 12px 14px; margin: 8px 0; border: 0.5px solid var(--green-border); }
+  .simple-box.open { display: block; }
+  .simple-box p { font-size: 13px; color: var(--green-text); line-height: 1.65; }
+  h4 { font-size: 13px; font-weight: 600; color: var(--text); margin: 14px 0 6px; }
+  ul, ol { padding-left: 18px; font-size: 13px; line-height: 1.8; color: var(--text); }
+  li { margin-bottom: 2px; }
+  code { font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace; font-size: 12px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--text); }
+  .code-block { font-family: 'Fira Code', 'Cascadia Code', 'Courier New', monospace; font-size: 12px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 12px; margin: 8px 0; color: var(--text); white-space: pre; overflow-x: auto; line-height: 1.7; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+  @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
+  .card-sm { background: var(--bg2); border-radius: var(--radius); padding: 10px 12px; border: 0.5px solid var(--border); }
+  .card-sm h5 { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .card-sm p { font-size: 12px; color: var(--text2); line-height: 1.55; }
+  .warn-box { background: var(--warn-bg); border-radius: var(--radius); padding: 10px 14px; margin: 8px 0; border: 0.5px solid var(--warn-border); }
+  .warn-box p { font-size: 12px; color: var(--warn-text); line-height: 1.6; }
+  table.mini { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
+  table.mini th { background: var(--bg2); padding: 6px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--text2); border: 0.5px solid var(--border); }
+  table.mini td { padding: 6px 10px; border: 0.5px solid var(--border); color: var(--text); vertical-align: top; }
+  p.prose { font-size: 13px; margin: 6px 0; color: var(--text); }
+  .badge-hdr { display: flex; align-items: center; gap: 8px; }
+</style>
+</head>
+<body>
+
+<h1>DBMS Complete Study Guide</h1>
+<p class="subtitle">24CSH-298 · All 3 Units · Textbook definitions + simple explanations</p>
+
+<div class="progress-bar">
+  <span class="pill">Introduction to Databases</span>
+  <span class="pill">Data Models & ER</span>
+  <span class="pill">Relational Algebra</span>
+  <span class="pill">Normalization (1NF–BCNF)</span>
+  <span class="pill">Data Security</span>
+  <span class="pill">Cursors & Views</span>
+  <span class="pill">Procedures & Triggers</span>
+  <span class="pill">Transactions & ACID</span>
+  <span class="pill">Concurrency Control</span>
+  <span class="pill">Database Recovery</span>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('u1',this)">Unit 1 — Introduction to Databases</button>
+  <button class="tab-btn" onclick="switchTab('u2',this)">Unit 2 — Storage &amp; Access</button>
+  <button class="tab-btn" onclick="switchTab('u3',this)">Unit 3 — Advanced DB</button>
+</div>
+
+<!-- ==================== UNIT 1 ==================== -->
+<div id="u1" class="tab-panel active">
+  <div class="unit-header"><h2>Unit 1: Introduction to Databases</h2><p>15 contact hours · 3 major topics</p></div>
+
+  <!-- Topic 1 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Overview of Databases</span>
+      <div class="badge-hdr"><span class="topic-badge">Fundamentals</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>database</strong> is an organized, persistent collection of logically related data that models some aspect of the real world. A <strong>Database Management System (DBMS)</strong> is a software system that enables users to define, create, maintain, and control access to a database.</p>
+      </div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>📚 Think of a database like a super-organized digital filing cabinet. Instead of scattered papers, all data is neatly stored. The DBMS is the filing cabinet manager — it lets you add, search, update, and delete files. Example: Facebook stores all your posts, photos, and friends in a database. The DBMS is what lets you instantly search for a friend among billions of users.</p></div>
+
+      <h4>Three-Level ANSI-SPARC Architecture</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>The ANSI-SPARC architecture defines three levels of abstraction: <strong>External Level</strong> (user views), <strong>Conceptual Level</strong> (logical structure of entire database), and <strong>Internal Level</strong> (physical storage structure). This separation provides data independence.</p>
+      </div>
+      <div class="grid2">
+        <div class="card-sm"><h5>External Level (View Level)</h5><p>What individual users see. Each user/app gets a customized view. E.g., HR sees employee salaries; Sales sees customer orders only.</p></div>
+        <div class="card-sm"><h5>Conceptual Level (Logical Level)</h5><p>The community view. Describes what data is stored and the relationships. DBA works at this level. Hides physical storage details.</p></div>
+      </div>
+      <div class="card-sm" style="margin-bottom:10px"><h5>Internal Level (Physical Level)</h5><p>How data is physically stored on disk — file organization, indexes, access paths, block sizes, compression. Hidden from users entirely.</p></div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🏢 Imagine a bank. A customer sees their own account (External). The bank manager sees all accounts and relationships (Conceptual). The computer engineers handle hard drives and file formats (Internal). The beauty: when engineers upgrade the hard drives (internal change), customers don't notice anything. That's data independence!</p></div>
+
+      <h4>Data Independence</h4>
+      <ul>
+        <li><strong>Physical Data Independence:</strong> Ability to change the internal/physical schema without affecting the conceptual schema. E.g., changing from HDD to SSD without rewriting queries.</li>
+        <li><strong>Logical Data Independence:</strong> Ability to change the conceptual schema without affecting external schemas/user applications. E.g., adding a new column to a table without breaking existing apps.</li>
+      </ul>
+
+      <h4>Keys in Relational Databases</h4>
+      <table class="mini">
+        <tr><th>Key Type</th><th>Definition</th><th>Example</th></tr>
+        <tr><td>Super Key</td><td>Any set of attributes that uniquely identifies a tuple</td><td>{StudentID}, {StudentID, Name}, {Email}</td></tr>
+        <tr><td>Candidate Key</td><td>Minimal super key (no redundant attributes)</td><td>{StudentID}, {Email}</td></tr>
+        <tr><td>Primary Key</td><td>Chosen candidate key; cannot be NULL</td><td>{StudentID}</td></tr>
+        <tr><td>Alternate Key</td><td>Candidate keys not chosen as primary key</td><td>{Email}</td></tr>
+        <tr><td>Foreign Key</td><td>Attribute in one table referencing primary key of another</td><td>Department.DeptID in Employee table</td></tr>
+        <tr><td>Composite Key</td><td>Primary key made of two or more attributes</td><td>{CourseID + StudentID} in Enrollment</td></tr>
+      </table>
+
+      <h4>Integrity Constraints</h4>
+      <div class="grid2">
+        <div class="card-sm"><h5>Entity Integrity</h5><p>No primary key attribute can be NULL. Every row must be uniquely identifiable. A student must have a StudentID — it cannot be empty/null.</p></div>
+        <div class="card-sm"><h5>Referential Integrity</h5><p>A foreign key value must either be NULL or match an existing primary key in the referenced table. You can't enroll a student in a course that doesn't exist.</p></div>
+      </div>
+
+      <h4>Schema vs Instance</h4>
+      <ul>
+        <li><strong>Schema:</strong> The structure/blueprint of a database — table names, column names, data types, constraints. Rarely changes.</li>
+        <li><strong>Instance:</strong> The actual data in the database at a particular moment in time. Changes constantly.</li>
+      </ul>
+
+      <h4>Advantages of DBMS</h4>
+      <ul>
+        <li>Reduced data redundancy (no duplicate data in multiple files)</li>
+        <li>Data consistency (one update reflects everywhere)</li>
+        <li>Data sharing (multiple users/apps access simultaneously)</li>
+        <li>Data security and access control</li>
+        <li>Backup and recovery mechanisms</li>
+        <li>Data integrity enforcement via constraints</li>
+      </ul>
+
+      <h4>Disadvantages of DBMS</h4>
+      <ul>
+        <li>High initial cost of software and hardware</li>
+        <li>Complexity — requires trained personnel (DBA)</li>
+        <li>Performance overhead compared to flat-file systems for simple tasks</li>
+        <li>Single point of failure (if DBMS crashes, all apps fail)</li>
+      </ul>
+
+      <h4>DBA (Database Administrator) — Responsibilities</h4>
+      <ul>
+        <li>Defining the conceptual and internal schemas</li>
+        <li>Managing user accounts and security privileges</li>
+        <li>Monitoring performance and tuning queries</li>
+        <li>Planning and implementing backup/recovery strategies</li>
+        <li>Ensuring data integrity and availability</li>
+        <li>Liaising between users and the DBMS system</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Topic 2 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Data Models</span>
+      <div class="badge-hdr"><span class="topic-badge">Core Concepts</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>data model</strong> is a collection of concepts used to describe the structure of a database — the data types, relationships, and constraints that apply to data. It provides a formal means to represent real-world entities and their interactions.</p>
+      </div>
+
+      <h4>Basic Building Blocks</h4>
+      <ul>
+        <li><strong>Entity:</strong> A real-world object or concept — e.g., Student, Course, Employee</li>
+        <li><strong>Attribute:</strong> A property or characteristic of an entity — e.g., Student has Name, Age, RollNo</li>
+        <li><strong>Relationship:</strong> An association between entities — e.g., Student "enrolls in" Course</li>
+        <li><strong>Constraint:</strong> A rule that limits valid data — e.g., Age must be &gt; 0</li>
+      </ul>
+
+      <h4>Degrees of Data Abstraction</h4>
+      <ul>
+        <li><strong>Physical Level:</strong> How data is actually stored (bits, bytes, files, indexes)</li>
+        <li><strong>Logical Level:</strong> What data is stored and relationships between data (tables, columns)</li>
+        <li><strong>View Level:</strong> Portion of database relevant to a particular user or application</li>
+      </ul>
+
+      <h4>Types of Data Models</h4>
+      <table class="mini">
+        <tr><th>Model</th><th>Structure</th><th>Pros</th><th>Cons</th></tr>
+        <tr><td>Hierarchical</td><td>Tree (parent-child, 1:N only)</td><td>Fast for tree-like data (org charts)</td><td>No M:N relationships; rigid structure</td></tr>
+        <tr><td>Network</td><td>Graph (any node can have multiple parents)</td><td>Supports M:N relationships</td><td>Complex navigation; hard to modify</td></tr>
+        <tr><td>Relational</td><td>Tables (rows and columns)</td><td>Simple, flexible, uses SQL</td><td>Performance overhead for complex joins</td></tr>
+        <tr><td>ER Model</td><td>Diagram of entities and relationships</td><td>Visual, intuitive for design</td><td>Not directly implemented; needs conversion</td></tr>
+      </table>
+
+      <h4>Entity-Relationship (ER) Model — Deep Dive</h4>
+      <div class="def-block">
+        <div class="def-label">Core ER concepts</div>
+        <p>The ER model represents the database design visually using entities (rectangles), attributes (ellipses), relationships (diamonds), and connecting lines with cardinality notations.</p>
+      </div>
+      <ul>
+        <li><strong>Strong Entity:</strong> Has its own primary key (e.g., Student with StudentID)</li>
+        <li><strong>Weak Entity:</strong> Depends on a strong entity for identification (e.g., Dependent of an Employee)</li>
+        <li><strong>Simple Attribute:</strong> Cannot be divided (e.g., Age)</li>
+        <li><strong>Composite Attribute:</strong> Can be divided into sub-attributes (e.g., Name → FirstName + LastName)</li>
+        <li><strong>Derived Attribute:</strong> Can be computed from other attributes (e.g., Age derived from DateOfBirth)</li>
+        <li><strong>Multi-valued Attribute:</strong> Can have multiple values (e.g., Phone numbers)</li>
+      </ul>
+
+      <h4>Mapping Constraints (Cardinality)</h4>
+      <ul>
+        <li><strong>1:1</strong> — One-to-One: One employee has one parking spot</li>
+        <li><strong>1:N</strong> — One-to-Many: One department has many employees</li>
+        <li><strong>M:1</strong> — Many-to-One: Many employees work in one department</li>
+        <li><strong>M:N</strong> — Many-to-Many: Many students enroll in many courses</li>
+      </ul>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🎓 Think of an ER diagram as a blueprint of a building before construction. Before building the database, you draw a map: boxes are things (Student, Teacher), ovals are their details (Name, Age), and diamonds show connections (Student TAKES Course). The cardinality is like saying "one teacher can teach many classes, but one class has only one teacher." Once the blueprint is approved, you then convert it to actual tables.</p></div>
+
+      <h4>Business Rules</h4>
+      <p class="prose">Business rules are statements that define or constrain some aspect of the business. They are the source of constraints in the ER model. Example: "A student cannot enroll in more than 6 courses per semester" → becomes a constraint in the database schema.</p>
+
+      <h4>Evolution of Data Models</h4>
+      <ul>
+        <li>1960s: Hierarchical (IMS by IBM) and Network models (CODASYL)</li>
+        <li>1970s: Relational model proposed by E.F. Codd (revolutionary — SQL-based)</li>
+        <li>1980s: Object-Oriented databases (OODBs)</li>
+        <li>1990s-2000s: Object-Relational databases (ORDBMs)</li>
+        <li>2000s+: NoSQL (document, key-value, graph, column-store) for big data</li>
+      </ul>
+
+      <h4>UML in Databases</h4>
+      <p class="prose">Unified Modeling Language (UML) class diagrams can model database structures. Classes = tables, attributes = columns, associations = relationships. UML is more expressive than ER and supports inheritance (generalization/specialization).</p>
+    </div>
+  </div>
+
+  <!-- Topic 3 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Relational Algebra and Relational Calculus</span>
+      <div class="badge-hdr"><span class="topic-badge">Query Languages</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p><strong>Relational Algebra</strong> is a procedural query language that uses a set of operations on relations (tables) to produce new relations. It forms the theoretical foundation for SQL. <strong>Relational Calculus</strong> is a non-procedural (declarative) query language that describes what to retrieve, not how.</p>
+      </div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🔧 Relational Algebra is like giving a robot step-by-step instructions: "First filter rows, then join two tables, then pick specific columns." Relational Calculus is like describing what you want: "Give me all students who are enrolled in CS courses" — without saying how to find them. SQL is mostly declarative (calculus-style) but optimizers convert it to algebra steps internally.</p></div>
+
+      <h4>Basic Operations of Relational Algebra</h4>
+      <table class="mini">
+        <tr><th>Operation</th><th>Symbol</th><th>Description</th><th>SQL Equivalent</th></tr>
+        <tr><td>Select (Restriction)</td><td>σ (sigma)</td><td>Filters rows based on a condition</td><td>WHERE clause</td></tr>
+        <tr><td>Project</td><td>π (pi)</td><td>Selects specific columns (removes duplicates)</td><td>SELECT columns</td></tr>
+        <tr><td>Union</td><td>∪</td><td>Combines rows from two compatible relations</td><td>UNION</td></tr>
+        <tr><td>Intersection</td><td>∩</td><td>Returns common rows in both relations</td><td>INTERSECT</td></tr>
+        <tr><td>Difference</td><td>−</td><td>Returns rows in R1 but not in R2</td><td>EXCEPT / MINUS</td></tr>
+        <tr><td>Cartesian Product</td><td>×</td><td>All possible combinations of rows from two tables</td><td>CROSS JOIN</td></tr>
+        <tr><td>Natural Join</td><td>⋈</td><td>Join on common attributes, removes duplicate columns</td><td>NATURAL JOIN</td></tr>
+        <tr><td>Division</td><td>÷</td><td>Tuples in R1 associated with ALL tuples in R2</td><td>Complex correlated subquery</td></tr>
+      </table>
+
+      <h4>Examples</h4>
+      <div class="code-block">σ Age > 20 (Student)          -- Select students older than 20
+π Name, RollNo (Student)       -- Project only Name and RollNo columns
+Student ⋈ Enrollment           -- Natural join on common attribute
+σ Dept='CS' (π Name,Dept (Employee))  -- Composition of operations</div>
+
+      <h4>Additional Operators</h4>
+      <ul>
+        <li><strong>Rename (ρ):</strong> Renames a relation or its attributes — ρ(NewName, OldRelation)</li>
+        <li><strong>Theta Join (⋈θ):</strong> Join with any condition (not just equality)</li>
+        <li><strong>Equijoin:</strong> Join where the condition is equality on specified attributes</li>
+        <li><strong>Outer Join:</strong> Left ⟕, Right ⟖, Full ⟗ — preserves non-matching tuples using NULLs</li>
+        <li><strong>Grouping/Aggregation (γ):</strong> Groups tuples and applies aggregate functions (COUNT, SUM, AVG)</li>
+      </ul>
+
+      <h4>Relational Calculus</h4>
+      <div class="grid2">
+        <div class="card-sm"><h5>Tuple Relational Calculus (TRC)</h5><p>Variables range over tuples of a relation. Syntax: {t | P(t)} — "all tuples t such that predicate P(t) is true." Example: {t | t ∈ Student ∧ t.Age > 20} gives all students over 20.</p></div>
+        <div class="card-sm"><h5>Domain Relational Calculus (DRC)</h5><p>Variables range over domains (attribute values), not tuples. Syntax: {⟨x,y⟩ | P(x,y)}. Example: {⟨n,a⟩ | ⟨n,a⟩ ∈ Student ∧ a > 20} gives names and ages of students over 20.</p></div>
+      </div>
+
+      <h4>Calculus vs Algebra Comparison</h4>
+      <table class="mini">
+        <tr><th>Aspect</th><th>Relational Algebra</th><th>Relational Calculus</th></tr>
+        <tr><td>Type</td><td>Procedural</td><td>Non-procedural (declarative)</td></tr>
+        <tr><td>Focus</td><td>How to retrieve data</td><td>What data to retrieve</td></tr>
+        <tr><td>Operations</td><td>σ, π, ×, ⋈, ∪, −</td><td>Logical predicates (∀, ∃, ∧, ∨, ¬)</td></tr>
+        <tr><td>Power</td><td>Equivalent (both relationally complete)</td><td>Equivalent</td></tr>
+        <tr><td>Codd's Theorem</td><td colspan="2">Both have equal expressive power — any query in one can be expressed in the other</td></tr>
+      </table>
+
+      <h4>Computational Capabilities</h4>
+      <p class="prose">A query language is <strong>relationally complete</strong> if it can express all queries expressible in relational algebra. Both TRC and DRC are relationally complete. SQL is also relationally complete (plus it has extra features like aggregation, ordering). Relational algebra/calculus cannot express some queries like transitive closure or recursive queries without extensions.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== UNIT 2 ==================== -->
+<div id="u2" class="tab-panel">
+  <div class="unit-header"><h2>Unit 2: Database Storage Structure and Data Accessing Technique</h2><p>15 contact hours · 3 major topics</p></div>
+
+  <!-- Topic 1 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Functional Dependencies and Normalization</span>
+      <div class="badge-hdr"><span class="topic-badge">Most Important</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>functional dependency</strong> (FD) X → Y holds on a relation R if and only if whenever two tuples of R agree on the attributes X, they must also agree on attributes Y. We say "X functionally determines Y" or "Y is functionally dependent on X."</p>
+      </div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🔑 If you know someone's StudentID, you automatically know their Name, Age, and Department. So: StudentID → Name, Age, Department. Knowing the StudentID "determines" all other info. This is functional dependency. It's like: knowing your Aadhaar number means you can find your name — Aadhaar# → Name.</p></div>
+
+      <h4>Types of Functional Dependencies</h4>
+      <div class="grid2">
+        <div class="card-sm"><h5>Full Functional Dependency (FFD)</h5><p>Y is fully functionally dependent on X if Y depends on all of X and not on any proper subset of X. Example: {StudentID, CourseID} → Grade. Grade depends on BOTH attributes together.</p></div>
+        <div class="card-sm"><h5>Partial Dependency</h5><p>Y depends on a proper subset of a composite key X. Example: {StudentID, CourseID} → StudentName, but StudentName only depends on StudentID alone. Bad! Causes redundancy.</p></div>
+      </div>
+      <div class="grid2" style="margin-top:10px">
+        <div class="card-sm"><h5>Transitive Dependency (TD)</h5><p>X → Y and Y → Z, so X → Z (transitively). Example: StudentID → DeptID → DeptName. StudentID transitively determines DeptName through DeptID. Causes update anomalies.</p></div>
+        <div class="card-sm"><h5>Multi-valued Dependency (MVD)</h5><p>X →→ Y means that for each value of X, the set of Y values is independent of other attributes. Example: Employee →→ Skill, Employee →→ Project. Leads to 4NF.</p></div>
+      </div>
+      <div class="card-sm" style="margin-top:10px"><h5>Join Dependency (JD)</h5><p>A relation R satisfies a join dependency ✶[R1, R2, ..., Rn] if R can always be reconstructed by joining its projections onto R1, R2, ..., Rn without loss of information. Relevant for 5NF.</p></div>
+
+      <h4>Normalization — Normal Forms</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p><strong>Normalization</strong> is the process of organizing a relational database to reduce data redundancy and improve data integrity by decomposing relations into smaller, well-structured relations while preserving data and dependencies.</p>
+      </div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🗂️ Normalization is like decluttering your wardrobe. Bad design: one huge table with everything mixed together (student info + course info + teacher info in one row). When a teacher's phone number changes, you update 100 rows — that's a mess (update anomaly). Normalization splits it into neat separate tables (Students, Courses, Teachers) and links them with foreign keys. Result: change teacher's phone in ONE place, it reflects everywhere.</p></div>
+
+      <table class="mini">
+        <tr><th>Normal Form</th><th>Rule</th><th>What it eliminates</th></tr>
+        <tr><td>1NF (First)</td><td>All attributes must be atomic (indivisible). No repeating groups. Every cell holds a single value.</td><td>Multi-valued attributes, repeating groups</td></tr>
+        <tr><td>2NF (Second)</td><td>Must be in 1NF. Every non-key attribute must be fully functionally dependent on the entire primary key (no partial dependencies).</td><td>Partial dependencies</td></tr>
+        <tr><td>3NF (Third)</td><td>Must be in 2NF. No non-key attribute should transitively depend on the primary key. Every non-key attribute depends directly on the primary key.</td><td>Transitive dependencies</td></tr>
+        <tr><td>BCNF (Boyce-Codd)</td><td>Stronger than 3NF. For every FD X → Y, X must be a super key. Handles anomalies 3NF misses with multiple overlapping candidate keys.</td><td>All FD anomalies not covered by 3NF</td></tr>
+        <tr><td>4NF</td><td>Must be in BCNF. No multi-valued dependencies except on super keys.</td><td>Multi-valued dependencies</td></tr>
+        <tr><td>5NF</td><td>Must be in 4NF. No join dependencies unless they follow from candidate keys.</td><td>Join dependencies</td></tr>
+      </table>
+
+      <h4>Anomalies (why normalization is needed)</h4>
+      <ul>
+        <li><strong>Insertion Anomaly:</strong> Cannot insert data without also inserting unrelated data</li>
+        <li><strong>Update Anomaly:</strong> Updating one fact requires updating many rows; inconsistency if some are missed</li>
+        <li><strong>Deletion Anomaly:</strong> Deleting one piece of data accidentally deletes other important data</li>
+      </ul>
+
+      <h4>Decomposition</h4>
+      <p class="prose">Splitting a relation into smaller relations. Must preserve:</p>
+      <ul>
+        <li><strong>Lossless Join:</strong> Original relation can be reconstructed exactly by joining decomposed relations (no spurious tuples)</li>
+        <li><strong>Dependency Preservation:</strong> All original functional dependencies can be enforced in the decomposed relations</li>
+      </ul>
+
+      <h4>De-normalization</h4>
+      <p class="prose">The intentional introduction of redundancy into a normalized schema to improve read performance. Used in data warehousing and OLAP systems where query speed matters more than update efficiency. Trade-off: faster reads but more storage and harder updates.</p>
+    </div>
+  </div>
+
+  <!-- Topic 2 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Data Security</span>
+      <div class="badge-hdr"><span class="topic-badge">Security</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p><strong>Database security</strong> refers to the collective measures used to protect and secure a database or database management software from illegitimate use, malicious threats and attacks, and unauthorized access. It encompasses the confidentiality, integrity, and availability (CIA Triad) of data.</p>
+      </div>
+
+      <h4>Threats to Database Security</h4>
+      <ul>
+        <li><strong>Unauthorized Access:</strong> Users accessing data they shouldn't (privilege escalation)</li>
+        <li><strong>SQL Injection:</strong> Malicious SQL code embedded in user inputs to manipulate queries</li>
+        <li><strong>Inference Attack:</strong> Deducing sensitive info from non-sensitive data</li>
+        <li><strong>Insider Threats:</strong> Authorized employees misusing access privileges</li>
+        <li><strong>Denial of Service (DoS):</strong> Overloading the database server to make it unavailable</li>
+        <li><strong>Data Theft/Breach:</strong> Unauthorized copying or exfiltration of data</li>
+        <li><strong>Malware:</strong> Viruses or ransomware encrypting/destroying database files</li>
+      </ul>
+
+      <h4>Countermeasures</h4>
+      <ul>
+        <li><strong>Authentication:</strong> Verifying the identity of users (passwords, MFA, biometrics)</li>
+        <li><strong>Authorization:</strong> Granting appropriate privileges using GRANT/REVOKE in SQL. Views restrict column-level access.</li>
+        <li><strong>Encryption:</strong> Encrypting data at rest and in transit (TLS/SSL, AES)</li>
+        <li><strong>Auditing:</strong> Logging all database access and modifications for forensic analysis</li>
+        <li><strong>Access Control:</strong> DAC (Discretionary), MAC (Mandatory), RBAC (Role-Based)</li>
+        <li><strong>Input Validation:</strong> Preventing SQL injection through parameterized queries / prepared statements</li>
+        <li><strong>Backup and Recovery:</strong> Regular backups to recover from attacks or failures</li>
+      </ul>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🔒 SQL Injection example: A login form takes username/password. If you type username: <code>admin'--</code>, a badly designed system might execute: SELECT * FROM users WHERE username='admin'-- AND password='...' — the -- comments out the password check! Countermeasure: use parameterized queries that treat user input as data, never as SQL code. This is a major real-world threat — countless companies have been breached this way.</p></div>
+    </div>
+  </div>
+
+  <!-- Topic 3 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Control Structures, Cursors and Views</span>
+      <div class="badge-hdr"><span class="topic-badge">PL/SQL</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Control Structures in PL/SQL</div>
+        <p>PL/SQL (Procedural Language for SQL) extends SQL with procedural constructs including conditional control, iterative control, and sequential control — enabling complex logic within database programs.</p>
+      </div>
+
+      <h4>Types of Control Structures</h4>
+      <div class="grid2">
+        <div class="card-sm"><h5>Conditional Control</h5><p>IF-THEN, IF-THEN-ELSE, IF-THEN-ELSIF, CASE statements. Executes code based on conditions.</p></div>
+        <div class="card-sm"><h5>Iterative Control</h5><p>LOOP (basic), WHILE-LOOP, FOR-LOOP. Repeats a block of code until a condition is met or a range is exhausted.</p></div>
+      </div>
+      <div class="card-sm" style="margin-top:10px"><h5>Sequential Control</h5><p>GOTO statement (jumps to a labeled section) and NULL statement (does nothing, used as a placeholder). Generally avoided in structured programming.</p></div>
+
+      <div class="code-block">-- IF-THEN-ELSE example
+IF salary > 50000 THEN
+  bonus := salary * 0.2;
+ELSIF salary > 30000 THEN
+  bonus := salary * 0.1;
+ELSE
+  bonus := 0;
+END IF;
+
+-- FOR LOOP example
+FOR i IN 1..10 LOOP
+  DBMS_OUTPUT.PUT_LINE(i);
+END LOOP;</div>
+
+      <h4>Cursors</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>cursor</strong> is a named control structure (pointer) in PL/SQL that refers to a private SQL work area where Oracle stores information about the processing of a SELECT or DML statement. It allows row-by-row processing of a multi-row query result set.</p>
+      </div>
+      <div class="grid2">
+        <div class="card-sm"><h5>Implicit Cursor</h5><p>Automatically created by Oracle for single-row SELECT INTO, INSERT, UPDATE, DELETE. Accessible via SQL% attributes: SQL%FOUND, SQL%NOTFOUND, SQL%ROWCOUNT.</p></div>
+        <div class="card-sm"><h5>Explicit Cursor</h5><p>Defined by the programmer for multi-row queries. Must be explicitly declared, opened (OPEN), fetched row by row (FETCH), and closed (CLOSE).</p></div>
+      </div>
+      <div class="code-block">DECLARE
+  CURSOR emp_cursor IS SELECT name, salary FROM Employee;
+  v_name Employee.name%TYPE;
+  v_sal  Employee.salary%TYPE;
+BEGIN
+  OPEN emp_cursor;
+  LOOP
+    FETCH emp_cursor INTO v_name, v_sal;
+    EXIT WHEN emp_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_name || ': ' || v_sal);
+  END LOOP;
+  CLOSE emp_cursor;
+END;</div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>👆 Imagine a query returns 100 rows. A cursor is like a finger pointing to one row at a time. You OPEN the query result, then FETCH one row, process it, FETCH next row, process it... until done, then CLOSE. It's how PL/SQL handles multi-row results one row at a time, like reading a book page by page instead of the whole book at once.</p></div>
+
+      <h4>Views</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>view</strong> is a virtual table defined by a stored SQL query. It does not store data physically (usually); instead, it derives its data from one or more base tables whenever it is accessed. A view presents a customized representation of the data.</p>
+      </div>
+      <div class="code-block">-- Creating a view
+CREATE VIEW HighSalaryEmployees AS
+  SELECT EmpID, Name, Salary, Department
+  FROM Employee
+  WHERE Salary > 50000;
+
+-- Using the view like a table
+SELECT * FROM HighSalaryEmployees WHERE Department = 'CS';</div>
+
+      <h4>Tables vs Views — Comparison</h4>
+      <table class="mini">
+        <tr><th>Aspect</th><th>Table</th><th>View</th></tr>
+        <tr><td>Storage</td><td>Physically stores data on disk</td><td>Virtual — stores only the query definition</td></tr>
+        <tr><td>Data</td><td>Contains actual data</td><td>Derives data from base tables at query time</td></tr>
+        <tr><td>Update</td><td>Always updatable</td><td>Only updatable if it meets certain conditions (no GROUP BY, no DISTINCT, no aggregates)</td></tr>
+        <tr><td>Performance</td><td>Faster (data already there)</td><td>Slightly slower (query re-executed each time)</td></tr>
+        <tr><td>Security</td><td>Full access to all columns</td><td>Can restrict columns/rows shown to users</td></tr>
+        <tr><td>Complexity</td><td>Simple structure</td><td>Can hide complex joins from users</td></tr>
+      </table>
+      <div class="warn-box"><p>⚠️ Materialized Views are an exception — they physically store the query results for faster access. They need to be refreshed periodically when base data changes.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== UNIT 3 ==================== -->
+<div id="u3" class="tab-panel">
+  <div class="unit-header"><h2>Unit 3: Advanced Database — Procedures, Transactions, and Recovery</h2><p>15 contact hours · 3 major topics</p></div>
+
+  <!-- Topic 1 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Packages, Procedures, and Triggers</span>
+      <div class="badge-hdr"><span class="topic-badge">PL/SQL Advanced</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Stored Procedure</div>
+        <p>A <strong>stored procedure</strong> is a named PL/SQL block stored in the database that performs specific tasks. It can accept parameters, execute SQL and procedural code, and optionally return values. Unlike functions, procedures do not return a value directly.</p>
+      </div>
+
+      <h4>Parts of a Procedure</h4>
+      <div class="code-block">CREATE OR REPLACE PROCEDURE procedure_name (
+  param1 IN  datatype,    -- Header: name + parameter list
+  param2 OUT datatype,
+  param3 IN OUT datatype
+) AS
+-- Declarative section (local variables)
+  local_var datatype;
+BEGIN
+  -- Executable section (main logic)
+  SQL statements and PL/SQL code;
+EXCEPTION
+  -- Exception handling section
+  WHEN OTHERS THEN DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END procedure_name;</div>
+
+      <h4>Parameter Modes</h4>
+      <table class="mini">
+        <tr><th>Mode</th><th>Direction</th><th>Can read?</th><th>Can write?</th><th>Use case</th></tr>
+        <tr><td>IN</td><td>Caller → Procedure</td><td>Yes</td><td>No (read-only)</td><td>Pass input values to procedure</td></tr>
+        <tr><td>OUT</td><td>Procedure → Caller</td><td>No</td><td>Yes</td><td>Return results to caller</td></tr>
+        <tr><td>IN OUT</td><td>Both directions</td><td>Yes</td><td>Yes</td><td>Pass value, modify it, and return it</td></tr>
+      </table>
+
+      <h4>Advantages of Stored Procedures</h4>
+      <ul>
+        <li>Performance: Pre-compiled and cached — faster execution than ad-hoc SQL</li>
+        <li>Security: Users can execute procedure without needing direct table access</li>
+        <li>Reusability: Write once, call from multiple applications</li>
+        <li>Maintainability: Business logic in one place; easier to update</li>
+        <li>Reduced network traffic: One call executes multiple SQL statements</li>
+      </ul>
+
+      <h4>Triggers</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>trigger</strong> is a stored PL/SQL block that is automatically executed (fired) by the database in response to a specified event on a particular table or view. Triggers are implicit — they run without being explicitly called.</p>
+      </div>
+      <div class="code-block">CREATE OR REPLACE TRIGGER trigger_name
+  BEFORE | AFTER | INSTEAD OF    -- Timing
+  INSERT | UPDATE | DELETE        -- DML Event
+  ON table_name
+  FOR EACH ROW | STATEMENT       -- Level
+DECLARE
+  -- declarations
+BEGIN
+  -- trigger body using :NEW and :OLD pseudo-records
+  IF INSERTING THEN ...
+  ELSIF UPDATING THEN ...
+  END IF;
+END;</div>
+
+      <h4>Types of Triggers</h4>
+      <table class="mini">
+        <tr><th>Classification</th><th>Types</th><th>Description</th></tr>
+        <tr><td>By Timing</td><td>BEFORE, AFTER, INSTEAD OF</td><td>BEFORE: fires before the DML. AFTER: fires after. INSTEAD OF: fires in place of DML on views.</td></tr>
+        <tr><td>By Event</td><td>INSERT, UPDATE, DELETE</td><td>Which DML operation triggers it</td></tr>
+        <tr><td>By Level</td><td>ROW-level, STATEMENT-level</td><td>Row: fires once per affected row. Statement: fires once per statement regardless of rows affected.</td></tr>
+        <tr><td>By DDL</td><td>DDL Triggers</td><td>Fire on CREATE, ALTER, DROP operations</td></tr>
+        <tr><td>System Events</td><td>Database triggers</td><td>Fire on STARTUP, SHUTDOWN, LOGON, LOGOFF events</td></tr>
+      </table>
+      <p class="prose">In row-level triggers: <code>:NEW.column</code> refers to new values (INSERT/UPDATE), <code>:OLD.column</code> refers to old values (UPDATE/DELETE).</p>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>⚡ A trigger is like a security camera alarm. You don't manually trigger the alarm — it fires automatically when something happens (motion detected). Similarly, a DB trigger fires automatically when someone inserts/updates/deletes data. Example: AFTER INSERT on Orders → automatically update inventory count. Or: BEFORE DELETE on Employee → log who was deleted to an audit table. You set it up once and it runs forever automatically.</p></div>
+
+      <h4>Packages</h4>
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>package</strong> is a schema object that groups logically related PL/SQL types, variables, cursors, constants, subprograms (procedures and functions), and exceptions into a single named unit. A package has two parts: the <strong>specification (spec)</strong> — the public interface, and the <strong>body</strong> — the implementation.</p>
+      </div>
+      <div class="code-block">-- Package Specification (Public interface)
+CREATE OR REPLACE PACKAGE emp_pkg AS
+  PROCEDURE hire_employee(name VARCHAR2, dept NUMBER);
+  FUNCTION get_salary(empid NUMBER) RETURN NUMBER;
+END emp_pkg;
+
+-- Package Body (Implementation)
+CREATE OR REPLACE PACKAGE BODY emp_pkg AS
+  PROCEDURE hire_employee(name VARCHAR2, dept NUMBER) IS
+  BEGIN INSERT INTO Employee ... END;
+  
+  FUNCTION get_salary(empid NUMBER) RETURN NUMBER IS
+    v_sal NUMBER;
+  BEGIN SELECT salary INTO v_sal FROM Employee ... RETURN v_sal; END;
+END emp_pkg;</div>
+      <p class="prose"><strong>Bodiless Package:</strong> A package specification with only declarations (constants, types, exceptions) and no body needed — used to define global constants/types shared across the application.</p>
+
+      <h4>Advantages of Packages</h4>
+      <ul>
+        <li>Modularity: Encapsulate related procedures/functions together</li>
+        <li>Encapsulation: Hide implementation details; only spec is public</li>
+        <li>Performance: Entire package loaded into memory on first call</li>
+        <li>Overloading: Multiple procedures with same name but different parameters</li>
+        <li>Global variables: Package-level variables persist for the session</li>
+      </ul>
+
+      <h4>Aggregate Functions, NULL Values, and Nested Subqueries</h4>
+      <ul>
+        <li><strong>Aggregate Functions:</strong> COUNT(*), SUM(col), AVG(col), MIN(col), MAX(col) — operate on sets of rows. Used with GROUP BY and HAVING.</li>
+        <li><strong>NULL Values:</strong> NULL means unknown/missing, not zero or empty string. NULL ≠ NULL. Use IS NULL / IS NOT NULL. Aggregate functions ignore NULLs (except COUNT(*)). NVL(col, 0) substitutes a value for NULL.</li>
+        <li><strong>Nested Subqueries:</strong> A SELECT inside another SQL statement. Can be in WHERE (correlated/non-correlated), FROM (inline view), or SELECT (scalar subquery). Example: SELECT name FROM Employee WHERE salary &gt; (SELECT AVG(salary) FROM Employee);</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Topic 2 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Transaction Management and Concurrency Control</span>
+      <div class="badge-hdr"><span class="topic-badge">Critical Topic</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p>A <strong>transaction</strong> is a logical unit of work that consists of one or more database operations (read/write) that must be executed as an indivisible unit. Either all operations succeed (COMMIT) or all are undone (ROLLBACK).</p>
+      </div>
+
+      <h4>ACID Properties</h4>
+      <table class="mini">
+        <tr><th>Property</th><th>Definition</th><th>Example</th></tr>
+        <tr><td><strong>A</strong>tomicity</td><td>All operations in a transaction complete successfully, or none do. All-or-nothing principle.</td><td>Bank transfer: debit + credit must both happen, or neither happens.</td></tr>
+        <tr><td><strong>C</strong>onsistency</td><td>A transaction brings the database from one valid state to another. All integrity constraints must hold before and after.</td><td>Account balances sum must remain constant after any transfer.</td></tr>
+        <tr><td><strong>I</strong>solation</td><td>Concurrent transactions execute as if they were serial. Intermediate states of a transaction are invisible to others.</td><td>Two people booking the last seat: one sees the seat booked only after the other's transaction commits.</td></tr>
+        <tr><td><strong>D</strong>urability</td><td>Once a transaction commits, its effects are permanently recorded even if the system crashes immediately after.</td><td>After you get "Payment successful," the record persists even through a server crash.</td></tr>
+      </table>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>🏦 Bank transfer: ₹10,000 from Account A to Account B. Step 1: Debit A by ₹10,000. Step 2: Credit B by ₹10,000. If the system crashes between steps 1 and 2: Atomicity says UNDO step 1 (rollback). Consistency says total money in bank must stay same. Isolation says another person checking balance during transfer sees either the old or new state, never a half-done state. Durability says after COMMIT, even a power cut won't lose the transfer record (it's in the log).</p></div>
+
+      <h4>Serializability and Recoverability</h4>
+      <ul>
+        <li><strong>Schedule:</strong> A sequence of read/write operations from multiple concurrent transactions</li>
+        <li><strong>Serial Schedule:</strong> Transactions execute one after another with no interleaving — always correct but slow</li>
+        <li><strong>Serializable Schedule:</strong> A concurrent schedule whose effect is equivalent to some serial schedule — correct AND allows concurrency</li>
+        <li><strong>Conflict Serializability:</strong> Two operations conflict if they access the same data item, at least one is a write, and they belong to different transactions. A schedule is conflict-serializable if its precedence graph has no cycles.</li>
+        <li><strong>Recoverable Schedule:</strong> A transaction T2 commits only after T1 commits if T2 has read data written by T1. Prevents dirty read problems.</li>
+        <li><strong>Cascadeless Schedule:</strong> Transactions read only committed data — avoids cascading rollbacks</li>
+      </ul>
+
+      <h4>Concurrency Problems</h4>
+      <table class="mini">
+        <tr><th>Problem</th><th>Description</th></tr>
+        <tr><td>Lost Update</td><td>T1 and T2 both read a value, both update it — T1's update is overwritten by T2 and lost</td></tr>
+        <tr><td>Dirty Read</td><td>T2 reads data written by T1, but T1 later rolls back — T2 used invalid (dirty) data</td></tr>
+        <tr><td>Unrepeatable Read</td><td>T1 reads a value, T2 updates and commits it, T1 reads again and gets a different value</td></tr>
+        <tr><td>Phantom Read</td><td>T1 reads a set of rows, T2 inserts new rows matching T1's query, T1 re-reads and sees new (phantom) rows</td></tr>
+      </table>
+
+      <h4>Locking Techniques</h4>
+      <div class="grid2">
+        <div class="card-sm"><h5>Shared Lock (S-Lock / Read Lock)</h5><p>Multiple transactions can hold a shared lock on the same item simultaneously. Allows concurrent reads. If any transaction holds S-lock, no other can get X-lock.</p></div>
+        <div class="card-sm"><h5>Exclusive Lock (X-Lock / Write Lock)</h5><p>Only one transaction can hold an exclusive lock. No other transaction can hold any lock (S or X) on that item. Required for writes.</p></div>
+      </div>
+      <div class="card-sm" style="margin-top:10px"><h5>Two-Phase Locking (2PL)</h5><p>A protocol ensuring serializability. Phase 1 (Growing): Locks are acquired, none released. Phase 2 (Shrinking): Locks are released, none acquired. Guarantees conflict-serializable schedules but can cause deadlocks. Strict 2PL: all locks held until COMMIT — prevents dirty reads.</p></div>
+
+      <h4>Deadlock</h4>
+      <p class="prose">T1 holds lock on A and waits for B. T2 holds lock on B and waits for A. Neither can proceed — deadlock. Detection via wait-for graph (cycle = deadlock). Prevention: lock ordering, timeout, wound-wait, wait-die schemes.</p>
+
+      <h4>Timestamp-Based Concurrency Control</h4>
+      <p class="prose">Each transaction is assigned a unique timestamp when it starts. Operations are ordered by timestamps instead of locks. Rules: if T tries to read/write a data item already updated by a newer transaction, T is rolled back and restarted with a new timestamp. Avoids deadlocks but may cause many rollbacks.</p>
+
+      <h4>Optimistic Concurrency Control</h4>
+      <p class="prose">Assumes conflicts are rare. Transactions execute without locking. At commit time (validation phase), check if any conflicts occurred. If no conflict → commit; if conflict → rollback and retry. Good for read-heavy workloads with low write conflicts.</p>
+
+      <h4>Granularity of Data Items</h4>
+      <ul>
+        <li><strong>Coarse granularity:</strong> Database → Table (less overhead, low concurrency)</li>
+        <li><strong>Fine granularity:</strong> Row → Attribute (high overhead, high concurrency)</li>
+        <li><strong>Intention Locks:</strong> IS, IX, SIX — used in hierarchical locking to signal intent before acquiring fine-grained locks</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Topic 3 -->
+  <div class="topic">
+    <div class="topic-header" onclick="toggleTopic(this)">
+      <span class="topic-title">Database Recovery</span>
+      <div class="badge-hdr"><span class="topic-badge">Reliability</span><span class="arrow">▼</span></div>
+    </div>
+    <div class="topic-body">
+      <div class="def-block">
+        <div class="def-label">Textbook Definition</div>
+        <p><strong>Database recovery</strong> is the process of restoring the database to a correct, consistent state after a failure. It ensures durability and atomicity of transactions by using recovery techniques that undo uncommitted changes and redo committed changes after a failure.</p>
+      </div>
+      <button class="simple-btn" onclick="toggleSimple(this)">💡 Simple explanation</button>
+      <div class="simple-box"><p>💾 Imagine you're writing a document and the power cuts. You lose unsaved changes. Database recovery prevents this. The DBMS continuously maintains a "diary" (transaction log) of every change made. If the system crashes, it reads the diary: "Did this transaction commit? Yes → redo it. Did this one commit? No → undo it." It's like Ctrl+Z with a perfect history that even survives crashes.</p></div>
+
+      <h4>Types of Failures</h4>
+      <table class="mini">
+        <tr><th>Failure Type</th><th>Description</th><th>Recovery Method</th></tr>
+        <tr><td>Transaction Failure</td><td>Logical error (division by zero, constraint violation) or system error causing rollback. Only affects one transaction.</td><td>Rollback using transaction log (UNDO)</td></tr>
+        <tr><td>System Failure (Crash)</td><td>OS crash, power failure, DBMS bug. Main memory (buffer) is lost; disk data survives. Affects all active transactions.</td><td>Log-based recovery (UNDO uncommitted, REDO committed)</td></tr>
+        <tr><td>Media Failure</td><td>Disk head crash or storage corruption. Disk data is lost or damaged. Most severe failure.</td><td>Restore from backup + replay log from last backup</td></tr>
+      </table>
+
+      <h4>Log-Based Recovery</h4>
+      <div class="def-block">
+        <div class="def-label">Write-Ahead Log (WAL) Protocol</div>
+        <p>Before any data item is written to the database, the log record describing the change must be written to stable storage. This ensures the log always has enough information to undo or redo changes.</p>
+      </div>
+      <ul>
+        <li><strong>Log Record:</strong> [Transaction ID, Data item, Old Value (BFIM), New Value (AFIM), Operation type]</li>
+        <li><strong>UNDO (Rollback):</strong> Use old values (BFIM - Before Image) to reverse uncommitted transactions</li>
+        <li><strong>REDO:</strong> Use new values (AFIM - After Image) to re-apply committed transactions lost in crash</li>
+        <li><strong>COMMIT record:</strong> Written when transaction commits — presence in log = committed; absence = must undo</li>
+      </ul>
+
+      <h4>Checkpoint-Based Recovery</h4>
+      <p class="prose">The DBMS periodically writes a checkpoint to the log: forces all dirty buffer pages to disk and records the set of active transactions. On recovery, only scan the log from the last checkpoint — not from the beginning. This greatly reduces recovery time.</p>
+      <div class="code-block">Recovery after crash using checkpoints:
+1. Find last checkpoint record → list of active transactions at that point
+2. Scan forward from checkpoint to crash point
+3. Divide transactions into:
+   - Redo list: had COMMIT record → redo their changes
+   - Undo list: no COMMIT record → undo their changes
+4. Apply REDOs forward, apply UNDOs backward</div>
+
+      <h4>Shadow Paging</h4>
+      <p class="prose">An alternative to log-based recovery. Maintains two page tables: current and shadow. The shadow page table always points to the last committed state. During a transaction, new pages are written to new disk blocks; the shadow is untouched. On commit, the current table replaces the shadow atomically. On failure, discard current table and use shadow — instant rollback. Disadvantage: poor performance due to random I/O patterns.</p>
+
+      <h4>Recovery Management Process</h4>
+      <ol style="font-size:13px;padding-left:18px;line-height:2.1">
+        <li><strong>Detection:</strong> Detect the failure (system crash, disk error, etc.)</li>
+        <li><strong>Assessment:</strong> Determine the type and extent of failure</li>
+        <li><strong>Analysis:</strong> Scan the log to identify committed and uncommitted transactions</li>
+        <li><strong>REDO:</strong> Re-apply all changes of committed transactions (forward recovery)</li>
+        <li><strong>UNDO:</strong> Reverse all changes of uncommitted transactions (backward recovery)</li>
+        <li><strong>Verification:</strong> Ensure database is in a consistent state</li>
+        <li><strong>Resumption:</strong> Resume normal database operations</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function toggleTopic(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+function toggleSimple(btn) {
+  const box = btn.nextElementSibling;
+  const isOpen = box.classList.contains('open');
+  box.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '💡 Simple explanation' : '💡 Hide simple explanation';
+}
+</script>
+</body>
+</html>
