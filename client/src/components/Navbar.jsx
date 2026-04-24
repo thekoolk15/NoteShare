@@ -27,7 +27,7 @@ const Navbar = () => {
                 + New Note
               </Link>
               <div className="nav-user">
-                <span className="nav-username">{user.username}</span>
+                <Link to="/profile" className="nav-username">{user.username}</Link>
                 <button onClick={handleLogout} className="btn-logout">Logout</button>
               </div>
             </>

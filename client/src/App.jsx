@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CreateNote from './pages/CreateNote';
 import ViewNote from './pages/ViewNote';
 import EditNote from './pages/EditNote';
+import Profile from './pages/Profile';
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/notes/new" element={<CreateNote />} />
               <Route path="/notes/:id" element={<ViewNote />} />
               <Route path="/notes/:id/edit" element={<EditNote />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </main>
           <Toaster

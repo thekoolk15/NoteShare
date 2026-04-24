@@ -88,4 +88,43 @@ router.get('/me', protect, async (req, res) => {
   });
 });
 
+// @route   PUT /api/auth/profile
+// @desc    Update username and/or email
+// @access  Private
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const { username, email } = req.body;
+    const user = await User.findById(req.user._id);
+
+    // Check for duplicates (only if changed)
+    if (username && username !== user.username) {
+      const existing = await User.findOne({ username });
+      if (existing) return res.status(400).json({ message: 'Username already taken' });
+      user.username = username;
+    }
+
+    if (email && email !== user.email) {
+      const existing = await User.findOne({ email });
+      if (existing) return res.status(400).json({ message: 'Email already registered' });
+      user.email = email;
+    }
+
+    await user.save();
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map(e => e.message);
+      return res.status(400).json({ message: messages.join(', ') });
+    }
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
