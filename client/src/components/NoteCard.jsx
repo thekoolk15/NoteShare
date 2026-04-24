@@ -2,9 +2,15 @@ import { Link } from 'react-router-dom';
 
 const NoteCard = ({ note }) => {
   const maxLen = 150;
-  // Strip HTML tags for preview
+  // Strip HTML tags for preview (remove style/script blocks first, then tags)
   const plainText = note.isHTML
-    ? note.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+    ? note.content
+        .replace(/<style[\s\S]*?<\/style>/gi, '')
+        .replace(/<script[\s\S]*?<\/script>/gi, '')
+        .replace(/<head[\s\S]*?<\/head>/gi, '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
     : note.content;
   const snippet = plainText.length > maxLen
     ? plainText.substring(0, maxLen) + '...'
