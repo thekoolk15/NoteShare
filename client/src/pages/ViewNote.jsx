@@ -112,7 +112,7 @@ const ViewNote = () => {
           <div className="note-iframe-wrapper">
             <iframe
               ref={iframeRef}
-              srcDoc={note.content}
+              srcDoc={note.content.replace('<head>', '<head><meta name="color-scheme" content="dark"><style>:root{color-scheme:dark}</style>')}
               title={note.title}
               onLoad={handleIframeLoad}
               style={{
@@ -120,7 +120,7 @@ const ViewNote = () => {
                 height: `${iframeHeight}px`,
                 border: 'none',
                 borderRadius: '12px',
-                background: '#fff'
+                background: '#1c1917'
               }}
               sandbox="allow-scripts allow-same-origin"
             />
