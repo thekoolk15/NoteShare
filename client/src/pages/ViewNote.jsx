@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getNoteById, deleteNote } from '../api/axios';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 const ViewNote = () => {
   const [note, setNote] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [iframeHeight, setIframeHeight] = useState(800);
+  const iframeRef = useRef(null);
   const { id } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -28,6 +30,22 @@ const ViewNote = () => {
     };
     fetchNote();
   }, [id]);
+
+  // Auto-resize iframe to fit content
+  const handleIframeLoad = useCallback(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      // Give scripts time to execute and DOM to settle
+      setTimeout(() => {
+        const height = doc.documentElement.scrollHeight || doc.body.scrollHeight;
+        setIframeHeight(Math.max(height + 40, 400));
+      }, 300);
+    } catch (e) {
+      console.warn('Could not auto-resize iframe');
+    }
+  }, []);
 
   const handleDelete = async () => {
     if (!window.confirm('Delete this note permanently?')) return;
@@ -91,7 +109,22 @@ const ViewNote = () => {
         </div>
 
         {note.isHTML ? (
-          <div className="note-view-content note-html-content" dangerouslySetInnerHTML={{ __html: note.content }} />
+          <div className="note-iframe-wrapper">
+            <iframe
+              ref={iframeRef}
+              srcDoc={note.content}
+              title={note.title}
+              onLoad={handleIframeLoad}
+              style={{
+                width: '100%',
+                height: `${iframeHeight}px`,
+                border: 'none',
+                borderRadius: '12px',
+                background: '#fff'
+              }}
+              sandbox="allow-scripts allow-same-origin"
+            />
+          </div>
         ) : (
           <div className="note-view-content">
             {note.content.split('\n').map((line, i) => (

@@ -857,6 +857,14 @@ a {
   text-decoration: underline;
 }
 
+/* HTML notes rendered in iframe */
+.note-iframe-wrapper {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
 .note-view-actions {
   display: flex;
   gap: 12px;
