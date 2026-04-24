@@ -9,7 +9,8 @@ const EditNote = () => {
     title: '',
     content: '',
     tags: '',
-    isPublic: true
+    isPublic: true,
+    isHTML: false
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,7 +36,8 @@ const EditNote = () => {
           title: data.title,
           content: data.content,
           tags: data.tags?.join(', ') || '',
-          isPublic: data.isPublic
+          isPublic: data.isPublic,
+          isHTML: data.isHTML || false
         });
       } catch (err) {
         toast.error('Note not found');
@@ -59,7 +61,8 @@ const EditNote = () => {
         title: form.title,
         content: form.content,
         tags: form.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
-        isPublic: form.isPublic
+        isPublic: form.isPublic,
+        isHTML: form.isHTML
       };
       await updateNote(id, noteData);
       toast.success('Note updated!');
@@ -139,6 +142,24 @@ const EditNote = () => {
                 </div>
               </label>
             </div>
+
+            {user.role === 'admin' && (
+              <div className="form-group">
+                <label className="toggle-label">
+                  <span>HTML Mode</span>
+                  <div className="toggle-wrapper">
+                    <input
+                      type="checkbox"
+                      name="isHTML"
+                      checked={form.isHTML}
+                      onChange={handleChange}
+                      id="html-toggle"
+                    />
+                    <span className="toggle-text">{form.isHTML ? '🌐 HTML' : '📝 Plain Text'}</span>
+                  </div>
+                </label>
+              </div>
+            )}
           </div>
 
           <div className="form-actions">

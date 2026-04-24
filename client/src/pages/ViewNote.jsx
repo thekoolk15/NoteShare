@@ -90,11 +90,15 @@ const ViewNote = () => {
           )}
         </div>
 
-        <div className="note-view-content">
-          {note.content.split('\n').map((line, i) => (
-            <p key={i}>{line || '\u00A0'}</p>
-          ))}
-        </div>
+        {note.isHTML ? (
+          <div className="note-view-content note-html-content" dangerouslySetInnerHTML={{ __html: note.content }} />
+        ) : (
+          <div className="note-view-content">
+            {note.content.split('\n').map((line, i) => (
+              <p key={i}>{line || '\u00A0'}</p>
+            ))}
+          </div>
+        )}
 
         {isOwner && (
           <div className="note-view-actions">

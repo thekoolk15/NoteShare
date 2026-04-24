@@ -28,6 +28,10 @@ const noteSchema = new mongoose.Schema({
   viewCount: {
     type: Number,
     default: 0
+  },
+  isHTML: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

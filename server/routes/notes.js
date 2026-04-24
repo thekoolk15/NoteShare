@@ -125,14 +125,18 @@ router.get('/:id', optionalAuth, async (req, res) => {
 // @access  Private
 router.post('/', protect, async (req, res) => {
   try {
-    const { title, content, tags, isPublic } = req.body;
+    const { title, content, tags, isPublic, isHTML } = req.body;
+
+    // Only admins can create HTML notes (RBAC)
+    const htmlAllowed = isHTML && req.user.role === 'admin';
 
     const note = await Note.create({
       title,
       content,
       author: req.user._id,
       tags: tags || [],
-      isPublic: isPublic !== undefined ? isPublic : true
+      isPublic: isPublic !== undefined ? isPublic : true,
+      isHTML: htmlAllowed
     });
 
     const populated = await note.populate('author', 'username');
@@ -162,12 +166,16 @@ router.put('/:id', protect, async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to edit this note' });
     }
 
-    const { title, content, tags, isPublic } = req.body;
+    const { title, content, tags, isPublic, isHTML } = req.body;
     
     note.title = title || note.title;
     note.content = content || note.content;
     note.tags = tags !== undefined ? tags : note.tags;
     note.isPublic = isPublic !== undefined ? isPublic : note.isPublic;
+    // Only admins can toggle HTML mode (RBAC)
+    if (isHTML !== undefined && req.user.role === 'admin') {
+      note.isHTML = isHTML;
+    }
 
     const updated = await note.save();
     const populated = await updated.populate('author', 'username');

@@ -9,7 +9,8 @@ const CreateNote = () => {
     title: '',
     content: '',
     tags: '',
-    isPublic: true
+    isPublic: true,
+    isHTML: false
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -33,7 +34,8 @@ const CreateNote = () => {
         title: form.title,
         content: form.content,
         tags: form.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean),
-        isPublic: form.isPublic
+        isPublic: form.isPublic,
+        isHTML: form.isHTML
       };
       const { data } = await createNote(noteData);
       toast.success('Note created!');
@@ -105,6 +107,24 @@ const CreateNote = () => {
                 </div>
               </label>
             </div>
+
+            {user.role === 'admin' && (
+              <div className="form-group">
+                <label className="toggle-label">
+                  <span>HTML Mode</span>
+                  <div className="toggle-wrapper">
+                    <input
+                      type="checkbox"
+                      name="isHTML"
+                      checked={form.isHTML}
+                      onChange={handleChange}
+                      id="html-toggle"
+                    />
+                    <span className="toggle-text">{form.isHTML ? '🌐 HTML' : '📝 Plain Text'}</span>
+                  </div>
+                </label>
+              </div>
+            )}
           </div>
 
           <div className="form-actions">
