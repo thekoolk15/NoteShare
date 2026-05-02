@@ -1,115 +1,141 @@
-# 📝 NoteShare — Online Notes Sharing Platform
+# 📝 NoteShare — Full Stack Notes Platform
 
-A full-stack MERN application for creating, sharing, and discovering notes with search functionality, tag system, and public/private visibility.
+A full-stack MERN web application for creating, sharing, and discovering notes with JWT authentication, role-based access control, and rich HTML note rendering.
 
-## Tech Stack
+🌐 **Live Demo:** [note-share-sigma.vercel.app](https://note-share-sigma.vercel.app)
+
+---
+
+## ✨ Features
+
+- **User Authentication** — Register/Login with JWT tokens
+- **CRUD Operations** — Create, Read, Update, Delete notes
+- **Full-Text Search** — MongoDB text index powered search
+- **Tag System** — Filter notes by tags with aggregation pipeline
+- **Public/Private Notes** — Visibility toggle per note
+- **Rich HTML Notes** — Admin users can publish interactive HTML study guides
+- **Role-Based Access Control (RBAC)** — Admin vs User roles
+- **Profile Management** — Edit username and email
+- **View Counter** — Track note popularity
+- **Responsive Design** — Mobile-friendly with glassmorphism UI
+- **Dark Theme** — Premium dark UI with animated gradients
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | React 18, Vite, React Router, Axios |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB Atlas, Mongoose |
-| **Authentication** | JWT, bcrypt |
-| **Styling** | Vanilla CSS (Dark Theme) |
+| **Frontend** | React 19, Vite 6, React Router 7, Axios, React Hot Toast |
+| **Backend** | Node.js, Express 5, JWT, bcryptjs, CORS |
+| **Database** | MongoDB (Mongoose 9 ODM) |
+| **Deployment** | Vercel (frontend), Render (backend), MongoDB Atlas (database) |
 
-## Features
-
-- ✅ User registration and login with JWT authentication
-- ✅ Create, read, update, delete notes (full CRUD)
-- ✅ Public/Private notes toggle (authorization)
-- ✅ Full-text search across titles and content
-- ✅ Tag system with filtering
-- ✅ Sorting (Newest, Oldest, Most Viewed, A-Z)
-- ✅ Pagination
-- ✅ Owner-only edit/delete (access control)
-- ✅ Responsive design
-- ✅ View count tracking
-
-## Project Structure
+## 📂 Project Structure
 
 ```
 NoteShare/
-├── client/                 # React Frontend (Vite)
+├── client/                  # React Frontend
 │   ├── src/
-│   │   ├── api/            # Axios instance & API calls
-│   │   ├── components/     # Navbar, NoteCard, SearchBar, TagFilter
-│   │   ├── context/        # AuthContext (JWT state management)
-│   │   ├── pages/          # Home, Login, Register, Dashboard, CreateNote, ViewNote, EditNote
-│   │   ├── App.jsx         # Main app with routing
-│   │   └── App.css         # Complete stylesheet
-│   └── package.json
+│   │   ├── api/axios.js     # API layer with JWT interceptor
+│   │   ├── context/         # React Context for auth state
+│   │   ├── components/      # Navbar, NoteCard, SearchBar, TagFilter
+│   │   ├── pages/           # Home, Dashboard, Login, Register, 
+│   │   │                    #   CreateNote, EditNote, ViewNote, Profile
+│   │   ├── App.jsx          # Router setup
+│   │   └── App.css          # All styles (glassmorphism, animations)
+│   └── vercel.json          # SPA routing config
 │
-├── server/                 # Express Backend
-│   ├── config/             # Database connection
-│   ├── middleware/          # JWT auth middleware
-│   ├── models/             # User & Note Mongoose schemas
-│   ├── routes/             # Auth & Notes REST API routes
-│   ├── seed.js             # Database seeding script
-│   ├── server.js           # Express server entry point
-│   └── package.json
+├── server/                  # Express Backend
+│   ├── config/db.js         # MongoDB connection
+│   ├── middleware/auth.js   # JWT auth middleware (protect + optionalAuth)
+│   ├── models/
+│   │   ├── User.js          # User schema (bcrypt pre-save hook)
+│   │   └── Note.js          # Note schema (text index for search)
+│   ├── routes/
+│   │   ├── auth.js          # Register, Login, Profile endpoints
+│   │   └── notes.js         # CRUD + Search + Tags endpoints
+│   ├── seed.js              # Database seeder
+│   └── server.js            # Express entry point + middleware chain
 │
-└── README.md
+└── *.html                   # Rich HTML study guide source files
 ```
 
-## API Endpoints
+## 🔌 API Endpoints
 
 ### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login & get JWT |
-| GET | `/api/auth/me` | Get current user |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | Public | Create new account |
+| POST | `/api/auth/login` | Public | Get JWT token |
+| GET | `/api/auth/me` | 🔒 | Get current user |
+| PUT | `/api/auth/profile` | 🔒 | Update username/email |
 
 ### Notes
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/notes` | Public notes (search, filter, paginate) |
-| GET | `/api/notes/mine` | Current user's notes |
-| GET | `/api/notes/tags` | All tags with counts |
-| GET | `/api/notes/:id` | Single note |
-| POST | `/api/notes` | Create note |
-| PUT | `/api/notes/:id` | Update note (owner only) |
-| DELETE | `/api/notes/:id` | Delete note (owner only) |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/notes` | Optional | List public notes (search, filter, sort, paginate) |
+| GET | `/api/notes/mine` | 🔒 | Get user's own notes |
+| GET | `/api/notes/tags` | Public | Get tags with counts (aggregation) |
+| GET | `/api/notes/:id` | Optional | Get single note |
+| POST | `/api/notes` | 🔒 | Create note |
+| PUT | `/api/notes/:id` | 🔒 Owner | Update note |
+| DELETE | `/api/notes/:id` | 🔒 Owner | Delete note |
 
-## Setup & Run Locally
+## 🔒 Security
 
+- **Passwords** hashed with bcrypt (10 salt rounds)
+- **JWT** authentication with 7-day expiry
+- **CORS** configured for cross-origin requests
+- **Input validation** via Mongoose schema validators
+- **Ownership checks** on edit/delete operations
+- **RBAC** enforced server-side for HTML note publishing
+- **Environment variables** for all secrets (never in code)
+
+## 🚀 Local Development
+
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account (or local MongoDB)
+
+### Setup
 ```bash
-# 1. Clone the repo
-git clone <repo-url>
+# Clone the repo
+git clone https://github.com/thekoolk15/NoteShare.git
 cd NoteShare
 
-# 2. Setup backend
+# Backend
 cd server
 npm install
-# Create .env with MONGO_URI, JWT_SECRET, PORT
-npm run seed    # Seed sample data
-npm start       # Start API on port 5001
+cp .env.example .env   # Add your MONGO_URI and JWT_SECRET
+npm start
 
-# 3. Setup frontend (in new terminal)
+# Frontend (new terminal)
 cd client
 npm install
-npm run dev     # Start on port 5173
+npm run dev
 ```
 
-## Environment Variables (server/.env)
-
+### Environment Variables
+Create `server/.env`:
 ```
-MONGO_URI=mongodb+srv://...
-JWT_SECRET=your_jwt_secret
-PORT=5001
+MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/noteshare
+JWT_SECRET=your_secret_key
+PORT=5000
 ```
 
-## Course Outcomes Covered
+## 📊 Database Schema
 
-| CO | Description | Implementation |
-|----|-------------|---------------|
-| CO1 | Frontend & backend fundamentals | React components, Express routes |
-| CO2 | Interactive frontend with React | SPA with routing, state, forms |
-| CO3 | RESTful APIs with database | Express REST API + MongoDB |
-| CO4 | Debug, test, optimize | Middleware chain, error handling |
-| CO5 | Full-stack with auth & DB | JWT auth, CRUD, deployment |
+**Users Collection:**
+`username` (unique) · `email` (unique) · `password` (hashed) · `role` (user/admin) · `timestamps`
 
-## Author
+**Notes Collection:**
+`title` · `content` · `author` (→ User ref) · `tags[]` · `isPublic` · `viewCount` · `isHTML` · `timestamps`
 
-**Ariv Kansal** — Chandigarh University  
-Full Stack-I (24CSP-293) Final Project
+**Relationship:** One User → Many Notes (via ObjectId reference)
+
+## 👤 Authors
+
+- **Ariv** — Full Stack Developer
+
+---
+
+*Built with the MERN Stack as a university project for Full Stack Development (24CSH-298)*

@@ -4,7 +4,6 @@ const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
 });
 
-// Attach JWT token to every request
 API.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem('noteshare_user'));
   if (user?.token) {
